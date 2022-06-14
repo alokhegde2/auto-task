@@ -38,6 +38,8 @@ def push_code(msg: str, branch: str = "main"):
 
     # Checking for the git repository already initialized or not
 
+    asciiLetterPrint()
+
     try:
         output = subprocess.check_output(
             ['git', 'status'], stderr=subprocess.STDOUT)
@@ -45,7 +47,6 @@ def push_code(msg: str, branch: str = "main"):
 
     except subprocess.CalledProcessError as e:
         if e.returncode == 128:
-            asciiLetterPrint()
             typer.secho(f"Git repository is not initialized\n\n\nWe are terminating the process",
                         fg=typer.colors.RED)
 
@@ -130,8 +131,6 @@ def push_code(msg: str, branch: str = "main"):
     if currentStatusOfTheRepo != -1:
         messageIfRepoIsUptoDate = decodedOutputStatus.split('\n')
 
-        asciiLetterPrint()
-
         typer.secho(f"{messageIfRepoIsUptoDate[1]}\n\n\nWe are terminating the process",
                     fg=typer.colors.GREEN)
 
@@ -142,22 +141,28 @@ def push_code(msg: str, branch: str = "main"):
 
     try:
         subprocess.check_output(
+            ['git', 'pull'], stderr=subprocess.STDOUT)
+
+        subprocess.check_output(
             ['git', 'add', '.'], stderr=subprocess.STDOUT)
+
+        typer.secho(f"Stagged the changes",
+                    fg=typer.colors.GREEN)
 
         subprocess.check_output(
             ['git', 'commit', '-m', msg], stderr=subprocess.STDOUT)
 
+        typer.secho(f"Committed the changes",
+                    fg=typer.colors.GREEN)
+
         subprocess.check_output(
-            ['git', 'push','--set-upstream','origin',branch], stderr=subprocess.STDOUT)
+            ['git', 'push', '--set-upstream', 'origin', branch], stderr=subprocess.STDOUT)
 
     except subprocess.CalledProcessError as e:
-        asciiLetterPrint()
         typer.secho(f"{e.output}",
                     fg=typer.colors.RED)
 
         exit()
-
-    asciiLetterPrint()
 
     typer.secho(f"Code pushed to the repository successfully",
                 fg=typer.colors.GREEN)
