@@ -148,7 +148,7 @@ def push_code(msg: str, branch: str = "main"):
             ['git', 'commit', '-m', msg], stderr=subprocess.STDOUT)
 
         subprocess.check_output(
-            ['git', 'push','git push --set-upstream','origin',branch], stderr=subprocess.STDOUT)
+            ['git', 'push','--set-upstream','origin',branch], stderr=subprocess.STDOUT)
 
     except subprocess.CalledProcessError as e:
         asciiLetterPrint()
